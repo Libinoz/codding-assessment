@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Service Overview — Active Job Cards</title>
+
+  <!-- Font Awesome (icons) -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    integrity="sha512-1r7o1k3uXf8lqYbF7qsmO5XF3qz5cB1I3IhQ0C1tQk0pCq3hHn1QmoNq5xQYQXlQzC8y2kVxYJc3Hkz7QO3Ymw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="top-bar">
+    <div class="top-bar__content">
+      <i class="fa-regular fa-calendar-days"></i>
+      <span id="currentDate"></span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section id="gridWrapper" class="grid-wrapper">
+      <div id="cardsGrid" class="cards-grid"></div>
+    </section>
+
+    <aside id="detailsPanel" class="details-panel" aria-hidden="true">
+      <div class="details-header">
+        <div class="details-title">
+          <i class="fa-solid fa-car"></i>
+          <span id="detailsPlate"></span>
+        </div>
+        <button id="closeDetails" class="details-close" aria-label="Close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="details-content">
+        <div class="details-row">
+          <div class="details-item">
+            <strong>VIN:</strong>
+            <span id="detailsVIN"></span>
+          </div>
+          <div class="details-item">
+            <strong>Owner:</strong>
+            <span id="detailsOwner"></span>
+          </div>
+          <div class="details-item">
+            <strong>Contact:</strong>
+            <span id="detailsContact"></span>
+          </div>
+        </div>
+
+        <div class="details-row">
+          <div class="details-item">
+            <strong>Est. delivery:</strong>
+            <span id="detailsDelivery"></span>
+          </div>
+          <div class="details-item">
+            <strong>Status:</strong>
+            <span id="detailsStatus"></span>
+          </div>
+          <div class="details-item">
+            <strong>Workers:</strong>
+            <span id="detailsWorkers"></span>
+          </div>
+        </div>
+
+        <div class="details-group">
+          <h4><i class="fa-solid fa-screwdriver-wrench"></i> Jobs</h4>
+          <ul id="detailsJobs" class="list"></ul>
+        </div>
+
+        <div class="details-group">
+          <h4><i class="fa-solid fa-gears"></i> Parts</h4>
+          <ul id="detailsParts" class="list"></ul>
+        </div>
+
+        <div class="details-actions">
+          <a href="#" id="viewJobCard" class="button-link">
+            <i class="fa-regular fa-file-lines"></i> View Job Card
+          </a>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

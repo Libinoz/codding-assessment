@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <input id="pass" type="password">
+    <button id="toggle">Show</button>
+
+    <script>
+      const pass = document.getElementById("pass");
+      const toggle = document.getElementById("toggle");
+
+      toggle.onclick = () => {
+        if (pass.type === "password") {
+          pass.type = "text";
+          toggle.textContent = "Hide";
+        } else {
+          pass.type = "password";
+          toggle.textContent = "Show";
+        }
+      };
+    </script>
+  </body>
+</html>
