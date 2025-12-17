@@ -4,8 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Service Overview — Active Job Cards</title>
-
-  <!-- Font Awesome (icons) -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -13,7 +11,304 @@
     crossorigin="anonymous"
     referrerpolicy="no-referrer"
   />
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    
+:root {
+  --bg: #F1F3F7;
+  --blue: #2652E0;
+  --white: #FFFFFF;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --radius: 12px;
+
+  
+  --status-new: #FFFD00;
+  --status-inprogress: #7EF782;
+  --status-onhold: #FF4E00;
+  --status-ready: #0000FF;
+  --status-unknown: #808080;
+  --status-overdue: #FF0000;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: #111827;
+  font: 14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+
+.top-bar {
+  width: 100%;
+  background: var(--blue);
+  color: var(--white);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: var(--shadow);
+}
+
+.top-bar__content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.top-bar__content i {
+  font-size: 18px;
+}
+
+
+.layout {
+  max-width: 1400px;
+  margin: 20px auto;
+  padding: 0 16px;
+  display: grid;
+  grid-template-columns: 1fr 0;
+  gap: 16px;
+  transition: grid-template-columns 280ms ease;
+}
+
+.layout.details-open {
+  grid-template-columns: 0.65fr 0.35fr; /* grid shrinks to ~65% */
+}
+
+
+.grid-wrapper {
+  width: 100%;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 14px 14px 12px;
+  transition: transform 160ms ease, filter 120ms ease, box-shadow 160ms ease;
+  cursor: pointer;
+  position: relative;
+  -webkit-transition: transform 160ms ease, filter 120ms ease, box-shadow 160ms ease;
+  -moz-transition: transform 160ms ease, filter 120ms ease, box-shadow 160ms ease;
+  -ms-transition: transform 160ms ease, filter 120ms ease, box-shadow 160ms ease;
+  -o-transition: transform 160ms ease, filter 120ms ease, box-shadow 160ms ease;
+}
+
+.card:active {
+  filter: brightness(0.98);
+  transform: translateY(1px);
+}
+
+.card:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.card-title i {
+  color: var(--blue);
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0b0b0b;
+  background: var(--status-unknown);
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.status-overdue { background: var(--status-overdue); color: #fff; }
+.status-new { background: var(--status-new); }
+.status-inprogress { background: var(--status-inprogress); }
+.status-onhold { background: var(--status-onhold); color: #fff; }
+.status-ready { background: var(--status-ready); color: #fff; }
+.status-unknown { background: var(--status-unknown); color: #fff; }
+
+.card-body {
+  display: grid;
+  gap: 6px;
+}
+
+.card-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #374151;
+}
+
+.card-line i {
+  color: #6b7280;
+}
+
+.workers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.worker-chip {
+  background: #eef2ff;
+  color: #1f2937;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 12px;
+}
+
+.details-panel {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  max-height: calc(100vh - 100px);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  transform: translateX(8px);
+}
+
+.details-header {
+  background: var(--blue);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+}
+
+.details-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+}
+
+.details-close {
+  background: transparent;
+  border: none;
+  color: var(--white);
+  font-size: 18px;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.details-content {
+  padding: 14px;
+  overflow: auto;
+  display: grid;
+  gap: 16px;
+}
+
+.details-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.details-item {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.details-group h4 {
+  margin: 0 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+}
+
+.list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.list li {
+  margin: 6px 0;
+}
+
+.details-actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.button-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  color: #111827;
+  text-decoration: none;
+  background: #f3f4f6;
+  transition: background 140ms ease, transform 140ms ease;
+}
+
+.button-link:hover {
+  background: #e5e7eb;
+}
+
+.button-link:active {
+  transform: translateY(1px);
+}
+
+.layout:not(.details-open) .details-panel {
+  visibility: hidden;
+  opacity: 0.0;
+  pointer-events: none;
+}
+
+.layout.details-open .details-panel {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+@media (max-width: 900px) {
+  .details-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+  </style>
 </head>
 <body>
   <header class="top-bar">
@@ -89,7 +384,333 @@
     </aside>
   </main>
 
-  <script src="script.js"></script>
+  <script >
+    
+function formatDateTime(dt) {
+  
+  const d = new Date(dt);
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = d.getFullYear();
+
+  let hours = d.getHours();
+  const minutes = String(d.getMinutes()).padStart(2, "0");
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12 || 12;
+
+  return `${day}-${month}-${year}, ${hours}:${minutes}${ampm}`;
+}
+
+function humanDate(d) {
+  const options = { weekday: "short", year: "numeric", month: "short", day: "numeric" };
+  return new Date(d).toLocaleDateString(undefined, options);
+}
+
+function statusClass(status, overdue) {
+  if (overdue) return "status-overdue";
+  const s = (status || "").toLowerCase();
+  switch (s) {
+    case "new": return "status-new";
+    case "in progress": return "status-inprogress";
+    case "on hold": return "status-onhold";
+    case "ready for delivery": return "status-ready";
+    default: return "status-unknown";
+  }
+}
+
+function isOverdue(item) {
+  const now = new Date();
+  const delivery = new Date(item.deliveryDate);
+  const status = (item.status || "").toLowerCase();
+ 
+  return delivery < now && status !== "ready for delivery";
+}
+
+
+const jobCards = [
+
+  {
+    plate: "KL-08-CD-5678",
+    vin: "MB2TB3CD4E5F67890",
+    owner: "Lakshmi Nair",
+    contact: "+91 91234 56789",
+    deliveryDate: offsetDays(1, 11, 0),
+    status: "New",
+    workers: ["Akhil"],
+    jobs: ["Initial assessment"],
+    parts: []
+  },
+ 
+
+  {
+    plate: "KL-32-IJ-7890",
+    vin: "ME5TE6FG7H8I90123",
+    owner: "Rahul Menon",
+    contact: "+91 95555 22211",
+    deliveryDate: offsetDays(0, 13, 15),
+    status: "Ready for Delivery",
+    workers: [],
+    jobs: ["Final inspection"],
+    parts: []
+  },
+  
+  {
+    plate: "KL-15-MN-1357",
+    vin: "MG7TG8HI9J0K12345",
+    owner: "Suresh",
+    contact: "+91 99999 00011",
+    deliveryDate: offsetDays(-2, 18, 0), // overdue
+    status: "In Progress",
+    workers: ["Arjun"],
+    jobs: ["Transmission fluid replacement"],
+    parts: ["ATF fluid"]
+  },
+
+  {
+    plate: "KL-10-QR-8642",
+    vin: "MI9TI0JK1L2M34567",
+    owner: "Anirudh",
+    contact: "+91 96666 11223",
+    deliveryDate: offsetDays(1, 16, 10),
+    status: "New",
+    workers: ["Hari"],
+    jobs: ["Bodywork estimate"],
+    parts: []
+  },
+  {
+    plate: "KL-40-ST-7531",
+    vin: "MJ0TJ1KL2M3N45678",
+    owner: "Sneha",
+    contact: "+91 95555 77889",
+    deliveryDate: offsetDays(0, 12, 0),
+    status: "In Progress",
+    workers: ["Meera", "Vivek"],
+    jobs: ["Tire rotation", "Wheel balancing"],
+    parts: []
+  },
+  {
+    plate: "KL-18-UV-6420",
+    vin: "MK1TK2LM3N4O56789",
+    owner: "Gopal",
+    contact: "+91 90011 22334",
+    deliveryDate: offsetDays(2, 18, 15),
+    status: "On Hold",
+    workers: [],
+    jobs: ["Insurance approval"],
+    parts: []
+  },
+  {
+    plate: "KL-34-WX-5310",
+    vin: "ML2TL3MN4O5P67890",
+    owner: "Zoya",
+    contact: "+91 94400 55667",
+    deliveryDate: offsetDays(-3, 9, 50), // overdue
+    status: "Unknown",
+    workers: ["Sujith"],
+    jobs: ["Diagnostics pending"],
+    parts: []
+  },
+  {
+    plate: "KL-27-YZ-4206",
+    vin: "MM3TM4NO5P6Q78901",
+    owner: "Manu",
+    contact: "+91 97777 88899",
+    deliveryDate: offsetDays(5, 15, 0),
+    status: "New",
+    workers: ["Deepa"],
+    jobs: ["Paint touch-up"],
+    parts: ["Paint kit"]
+  },
+  {
+    plate: "KL-05-AA-3141",
+    vin: "MN4TN5OP6Q7R89012",
+    owner: "Kiran",
+    contact: "+91 98870 12012",
+    deliveryDate: offsetDays(0, 19, 45),
+    status: "Ready for Delivery",
+    workers: [],
+    jobs: ["Delivery prep"],
+    parts: []
+  },
+  {
+    plate: "KL-23-BB-2718",
+    vin: "MO5TO6PQ7R8S90123",
+    owner: "Reshma",
+    contact: "+91 90123 45678",
+    deliveryDate: offsetDays(2, 11, 35),
+    status: "In Progress",
+    workers: ["Akhil", "Nikhil"],
+    jobs: ["Cooling system flush"],
+    parts: ["Coolant"]
+  },
+
+];
+
+
+function offsetDays(daysOffset, hour = 15, minute = 30) {
+  const d = new Date();
+  d.setDate(d.getDate() + daysOffset);
+  d.setHours(hour, minute, 0, 0);
+  return d.toISOString();
+}
+
+
+const currentDateEl = document.getElementById("currentDate");
+const cardsGridEl = document.getElementById("cardsGrid");
+const layoutEl = document.querySelector(".layout");
+const detailsPanelEl = document.getElementById("detailsPanel");
+const closeDetailsEl = document.getElementById("closeDetails");
+
+const detailsPlateEl = document.getElementById("detailsPlate");
+const detailsVINEl = document.getElementById("detailsVIN");
+const detailsOwnerEl = document.getElementById("detailsOwner");
+const detailsContactEl = document.getElementById("detailsContact");
+const detailsDeliveryEl = document.getElementById("detailsDelivery");
+const detailsStatusEl = document.getElementById("detailsStatus");
+const detailsWorkersEl = document.getElementById("detailsWorkers");
+const detailsJobsEl = document.getElementById("detailsJobs");
+const detailsPartsEl = document.getElementById("detailsParts");
+const viewJobCardEl = document.getElementById("viewJobCard");
+
+
+initDate();
+renderGrid(jobCards);
+attachEvents();
+
+
+function initDate() {
+  const now = new Date();
+  currentDateEl.textContent = humanDate(now);
+}
+
+function renderGrid(data) {
+  cardsGridEl.innerHTML = "";
+  data.forEach((item, idx) => {
+    const overdue = isOverdue(item);
+    const badgeClass = statusClass(item.status, overdue);
+
+    const workersHtml =
+      item.workers && item.workers.length
+        ? `<div class="workers">${item.workers.map(w => `<span class="worker-chip">${escapeHTML(w)}</span>`).join("")}</div>`
+        : "";
+
+    const card = document.createElement("article");
+    card.className = "card";
+    card.setAttribute("tabindex", "0");
+    card.setAttribute("role", "button");
+    card.dataset.index = idx;
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fa-solid fa-car"></i>
+          <span>${escapeHTML(item.plate)}</span>
+        </div>
+        <span class="status-badge ${badgeClass}">${escapeHTML(overdue ? "Overdue" : item.status || "Unknown")}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-line">
+          <i class="fa-regular fa-clock"></i>
+          <span>${formatDateTime(item.deliveryDate)}</span>
+        </div>
+        ${workersHtml ? `
+          <div class="card-line">
+            <i class="fa-solid fa-people-group"></i>
+            ${workersHtml}
+          </div>` : ""}
+      </div>
+    `;
+    cardsGridEl.appendChild(card);
+  });
+}
+
+function attachEvents() {
+ 
+  cardsGridEl.addEventListener("click", (e) => {
+    const card = e.target.closest(".card");
+    if (!card) return;
+    const idx = Number(card.dataset.index);
+    openDetails(jobCards[idx]);
+  });
+
+ 
+  cardsGridEl.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      const card = e.target.closest(".card");
+      if (!card) return;
+      const idx = Number(card.dataset.index);
+      openDetails(jobCards[idx]);
+    }
+  });
+
+ 
+  closeDetailsEl.addEventListener("click", closeDetails);
+
+
+  viewJobCardEl.addEventListener("click", (e) => {
+    e.preventDefault();
+    alert("Job Card opened (demo). Hook this to your detailed page or modal.");
+  });
+
+ 
+  document.addEventListener("click", (e) => {
+    const withinPanel = e.target.closest("#detailsPanel");
+    const withinCard = e.target.closest(".card");
+    if (!withinPanel && !withinCard && layoutEl.classList.contains("details-open")) {
+      closeDetails();
+    }
+  });
+}
+
+function openDetails(item) {
+  detailsPanelEl.setAttribute("aria-hidden", "false");
+  layoutEl.classList.add("details-open");
+
+  detailsPlateEl.textContent = item.plate;
+  detailsVINEl.textContent = item.vin;
+  detailsOwnerEl.textContent = item.owner;
+  detailsContactEl.textContent = item.contact;
+  detailsDeliveryEl.textContent = formatDateTime(item.deliveryDate);
+  detailsStatusEl.textContent = isOverdue(item) ? "Overdue" : (item.status || "Unknown");
+
+  detailsWorkersEl.textContent = (item.workers && item.workers.length) ? item.workers.join(", ") : "—";
+
+  
+  detailsJobsEl.innerHTML = "";
+  (item.jobs || []).forEach(j => {
+    const li = document.createElement("li");
+    li.textContent = j;
+    detailsJobsEl.appendChild(li);
+  });
+  if (!item.jobs || !item.jobs.length) {
+    detailsJobsEl.innerHTML = `<li>—</li>`;
+  }
+
+  detailsPartsEl.innerHTML = "";
+  (item.parts || []).forEach(p => {
+    const li = document.createElement("li");
+    li.textContent = p;
+    detailsPartsEl.appendChild(li);
+  });
+  if (!item.parts || !item.parts.length) {
+    detailsPartsEl.innerHTML = `<li>—</li>`;
+  }
+}
+
+function closeDetails() {
+  layoutEl.classList.remove("details-open");
+  detailsPanelEl.setAttribute("aria-hidden", "true");
+}
+
+function escapeHTML(str) {
+  return String(str)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+  </script>
 </body>
 </html>
 
